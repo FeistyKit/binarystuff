@@ -13,6 +13,7 @@ fn input(prompt: &str) -> Result<String, std::io::Error> {
     io::stdin().read_line(&mut s)?;
     Ok(s)
 }
+//f
 fn to_text(mut s: String) {
     s = s.trim().to_string();
     let mut h = Vec::new();
@@ -29,9 +30,16 @@ fn to_text(mut s: String) {
             }
         }
     }
-    let q = String::from_utf8(h).unwrap();
-    println!("{}", q);
-    write_to_file(&q);
+    match String::from_utf8(h) {
+        Err(_) => {
+            println!("That file is not formatted correctly!");
+            run();
+        }
+        Ok(q) => {
+            println!("{}", q);
+            write_to_file(&q);
+        }
+    }
 }
 fn to_text_in(s: &str) -> Result<String, ParseIntError> {
     let g = s.trim().to_string();
@@ -87,11 +95,11 @@ fn parse_insts(s: String, b: &str) {
             run();
         }
         Some('3') => {
-            replace_binary(s, get_last_char(b).unwrap());
+            replace_binary(s, get_last_char(b).unwrap_or('0'));
             run();
         }
         Some('4') => {
-            decode_binary(s, get_last_char(b).unwrap());
+            decode_binary(s, get_last_char(b).unwrap_or('0'));
             run();
         }
         Some('5') => {
